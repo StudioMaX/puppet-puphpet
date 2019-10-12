@@ -7,7 +7,7 @@ class puphpet::php::xdebug::install
   $php    = $puphpet::params::hiera['php']
 
   $compile = $puphpet::php::params::version_match ? {
-    '7.2'   => true,
+    '7.4'   => true,
     default => false,
   }
 
