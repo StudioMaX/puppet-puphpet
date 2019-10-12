@@ -7,7 +7,7 @@ class puphpet::rabbitmq::params
     'redhat' => "https://packagecloud.io/rabbitmq/rabbitmq-server/el/${facts['os'][release][major]}/\$basearch",
   }
 
-  $gpg_key     = '418A7F2FB0E1E6E7EABF6FE8C2E73424D59097AB'
+  $gpg_key     = '8C695B0219AFDEB04A058ED8F4E789204D206F89'
 
   if array_true($puphpet::params::hiera['apache'], 'install') or
      array_true($puphpet::params::hiera['nginx'], 'install')
