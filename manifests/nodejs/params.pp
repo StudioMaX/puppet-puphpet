@@ -8,6 +8,9 @@ class puphpet::nodejs::params
   }
 
   $version = $puphpet::params::hiera['nodejs']['settings']['version'] ? {
+    '12'    => '12.x',
+    '11'    => '11.x',
+    '10'    => '10.x',
     '9'     => '9.x',
     '8'     => '8.x',
     '7'     => '7.x',
