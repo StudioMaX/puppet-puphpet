@@ -49,7 +49,7 @@ define puphpet::nginx::proxies (
       'proxy_set_body'        => $proxy_set_body,
     })
 
-    create_resources(nginx::resource::vhost, { "${key}" => $merged })
+    create_resources(nginx::resource::server, { "${key}" => $merged })
   }
 
 }

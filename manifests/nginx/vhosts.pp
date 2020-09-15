@@ -58,7 +58,7 @@ define puphpet::nginx::vhosts (
       true    => $vhost['ssl_ciphers'],
       default => join($puphpet::nginx::params::allowed_ciphers, ':'),
     }
-    $rewrite_to_https = $ssl and array_true($vhost, 'rewrite_to_https') ? {
+    $ssl_redirect = $ssl and array_true($vhost, 'ssl_redirect') ? {
       true    => true,
       default => undef,
     }
@@ -72,19 +72,19 @@ define puphpet::nginx::vhosts (
       default => $ssl_key,
     }
 
-    $vhost_cfg_append = deep_merge(
-      {'vhost_cfg_append' => {'sendfile' => 'off'}},
+    $server_cfg_append = deep_merge(
+      {'server_cfg_append' => {'sendfile' => 'off'}},
       $vhost
     )
 
-    # rewrites
-    $rewrites = array_true($vhost, 'rewrites') ? {
-      true    =>  $vhost['rewrites'],
-      default =>  {}
+    # rewrite_rules
+    $rewrite_rules = array_true($vhost, 'rewrite_rules') ? {
+      true    =>  $vhost['rewrite_rules'],
+      default =>  []
     }
 
-    $vhost_rewrites_append = deep_merge($vhost_cfg_append, {
-      'rewrites'  => $rewrites
+    $vhost_rewrites_append = deep_merge($server_cfg_append, {
+      'rewrite_rules' => $rewrite_rules
     })
 
     $listen_port = array_true($vhost, 'listen_port') ? {
@@ -109,10 +109,10 @@ define puphpet::nginx::vhosts (
       'ssl_port'             => $ssl_port,
       'ssl_protocols'        => $ssl_protocols,
       'ssl_ciphers'          => "\"${ssl_ciphers}\"",
-      'rewrite_to_https'     => $rewrite_to_https,
+      'ssl_redirect'         => $ssl_redirect,
     }), ['server_aliases', 'proxy', 'locations'])
 
-    create_resources(nginx::resource::vhost, { "${key}" => $merged })
+    create_resources(nginx::resource::server, { "${key}" => $merged })
 
     # config file could contain no vhost.locations key
     $locations = array_true($vhost, 'locations') ? {

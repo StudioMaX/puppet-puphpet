@@ -7,7 +7,7 @@
 #  class { 'puphpet::nginx::install': }
 #
 class puphpet::nginx::install
- inherits puphpet::nginx::params {
+  inherits puphpet::nginx::params {
 
   include ::nginx::params
 
@@ -23,7 +23,7 @@ class puphpet::nginx::install
   }), 'version')
 
   Class['puphpet::nginx::ssl_cert']
-  -> Nginx::Resource::Vhost <| |>
+  -> Nginx::Resource::Server <| |>
 
   class { 'puphpet::nginx::ssl_cert': }
 

@@ -37,21 +37,19 @@ define puphpet::nginx::locations (
       'internal'  => $internal,
     })
 
-    # Takes gui ENV vars: fastcgi_param {ENV_NAME} {VALUE}
-    $location_custom_cfg_append = prefix(
-      $location_custom_data['fast_cgi_params_extra'],
-      'fastcgi_param '
-    )
+    $location_cfg_append = {
+      'fastcgi_param' => $location_custom_data['fast_cgi_params_extra'],
+    }
 
     # separate from $location_custom_data because some values
     # really need to be set to a default.
     # Removes fast_cgi_params_extra because it only exists in gui
     # not puppet-nginx
     $location_no_root = delete(merge({
-      'index_files'                => $index_files,
-      'vhost'                      => $vhost_key,
-      'ssl'                        => $ssl,
-      'location_custom_cfg_append' => $location_custom_cfg_append,
+      'index_files'         => $index_files,
+      'server'              => $vhost_key,
+      'ssl'                 => $ssl,
+      'location_cfg_append' => $location_cfg_append,
     }, $location_custom_data), 'fast_cgi_params_extra')
 
     # If www_root was removed with all the trimmings,
@@ -66,9 +64,9 @@ define puphpet::nginx::locations (
 
     # location rewrites
     $location_merged = deep_merge($location_root_merged, {
-      'rewrites'  => array_true($location_root_merged, 'rewrites') ? {
-        true    => $location_root_merged['rewrites'],
-        default => { }
+      'rewrite_rules'  => array_true($location_root_merged, 'rewrite_rules') ? {
+        true    => $location_root_merged['rewrite_rules'],
+        default => []
       }
     })
 
