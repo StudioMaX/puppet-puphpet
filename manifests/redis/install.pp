@@ -25,9 +25,9 @@ class puphpet::redis::install {
   }
 
   if array_true($redis['settings'], 'conf_port') {
-    $port = $redis['settings']['conf_port']
+    $port = Integer($redis['settings']['conf_port'])
   } else {
-    $port = $redis['settings']['port']
+    $port = Integer($redis['settings']['port'])
   }
 
   $settings = delete(deep_merge({
